@@ -172,7 +172,7 @@
 			
 			var address = "n1fUGQuxDFJeSHDcqAUHaU76ai94eGW4xDP";
 			var nebulas = require("nebulas"), Account = Account, neb = new nebulas.Neb();
-			neb.setRequest(new nebulas.HttpRequest("https://testnet.nebulas.io"))
+			neb.setRequest(new nebulas.HttpRequest("https://mainnet.nebulas.io"))
 			
 			var NebPay = require("nebpay");
 			var nebPay = new NebPay();
@@ -193,6 +193,7 @@
 			neb.api.call(from, address, value, nonce, gas_price, gas_limit, contract1).then(function (resp) {
 				var result = resp.result;
 				if (result === 'null') {
+					$("#doneTotal").text("0")
 					return;
 				}
 				var myTomatoTotal = result.replace(/\"/g,"")
