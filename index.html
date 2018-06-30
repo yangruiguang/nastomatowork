@@ -57,7 +57,7 @@
 							<div class="col-md-8 text-center">
 								<div class="mb-3"></div>
 								<fieldset class="" align="center">
-									<legend>🍅星云番茄时间管理🍅</legend>    
+									<legend>星云番茄时间管理</legend>    
 								</fieldset>
 								<h3>我是测试的我是测试的我是测试的我是测试的我是测试的我是测试的我是测试的我是测试的我是测试的我是测试的我是测试的我是测试的我是测试的我是测试的</h3>
 							</div>
@@ -135,7 +135,6 @@
 					<!-- 模态框头部 -->
 					<div class="modal-header">
 						<h4 class="modal-title">请输入钱包地址</h4>
-						<button type="button" class="close" data-dismiss="modal">&times;</button>
 					</div>
 					<!-- 模态框主体 -->
 					<div class="modal-body">
@@ -164,6 +163,7 @@
 					}
 					localStorage.setItem("mywalletaddress", $("#walletInput").val());
 					$("#walletModal").modal('hide');
+					location.reload();
 				});
 			}
 			
