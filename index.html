@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>星云番茄时间管理</title>
+
+    <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+
+    <link href="vendor/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href="vendor/simple-line-icons/css/simple-line-icons.css" rel="stylesheet" type="text/css">
+    <link href="https://fonts.googleapis.com/css?family=Lato:300,400,700,300italic,400italic,700italic" rel="stylesheet" type="text/css">
+
+    <link href="css/landing-page.min.css" rel="stylesheet">
+		
+		<link href="vendor/prism/prism.css" rel="stylesheet">
+		
+		<link rel="stylesheet" type="text/css" href="vendor/DataTables/datatables.min.css"/>
+
+  </head>
+
+  <body>
+		
+    <nav class="navbar navbar-light bg-light static-top">
+      <div class="container">
+        <a class="navbar-brand" href="#"><img alt="Brand" style="max-width:250px;margin-top:-7px;" src="img/logo_word.png"></a>
+				<ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
+					<li class="nav-item">
+						<a class="nav-link active" href="#">首页</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link" href="list.html">事项</a>
+					</li>
+					<li class="nav-item" id="new">
+						<a class="nav-link"href="count.html">统计</a>
+					</li>
+				</ul>
+      </div>
+    </nav>
+
+    
+		
+		<section>
+			<div class="container">
+				<div class="row">
+					<div class="col-md-4 mx-auto">
+						<img src="img/tomato.png">
+					</div>
+					<div class="col-md-8 mx-auto">
+						<div class="row">
+							<div class="col-md-3"></div>
+							<div class="col-md-8 text-center">
+								<div class="mb-3"></div>
+								<fieldset class="" align="center">
+									<legend>🍅星云番茄时间管理🍅</legend>    
+								</fieldset>
+								<h3>我是测试的我是测试的我是测试的我是测试的我是测试的我是测试的我是测试的我是测试的我是测试的我是测试的我是测试的我是测试的我是测试的我是测试的</h3>
+							</div>
+							<div class="col-md-1"></div>
+						</div>
+						
+						<div class="mb-5"></div>
+						<div class="row">
+							<div class="col-md-3"></div>
+							<fieldset class="col-md-8 mb-3" align="center">
+								<legend>我已完成番茄钟<span id="doneTotal" style="color: brown;"></span>个</legend>    
+							</fieldset>
+							<div class="col-md-1"></div>
+						</div>
+						<div class="row">
+							<div class="col-md-3"></div>
+							<table class="table table-hover col-md-8 text-center" id="rankTable">
+								<thead>
+									<tr>
+										<th scope="col"></th>
+										<th scope="col">用户</th>
+										<th scope="col">番茄钟</th>
+									</tr>
+								</thead>
+								<tbody>
+								</tbody>
+							</table>
+							<div class="col-md-1"></div>
+						</div>
+					</div>
+				</div>
+					
+				</div>
+			</div>
+		</section>
+		
+
+    <footer class="footer bg-light">
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-6 text-center text-lg-left my-auto">
+						<ul class="list-inline mb-2">
+              <li class="list-inline-item">
+                <a href="https://github.com/nebulasio/wiki/wiki" style="text-decoration: none;color: cornflowerblue" target="view_window">星云WiKi</a>
+              </li>
+              <li class="list-inline-item"></li>
+							<li class="list-inline-item"></li>
+              <li class="list-inline-item">
+                <a href="https://nebulas.io/cn/resources.html" style="text-decoration: none;color: cornflowerblue" target="view_window">钱包下载</a>
+              </li>
+							<li class="list-inline-item"></li>
+							<li class="list-inline-item"></li>
+              <li class="list-inline-item">
+                <a href="mailto:yangruiguangryan@163.com" style="text-decoration: none;color: cornflowerblue" target="view_window">联系我们</a>
+              </li>
+            </ul>
+          </div>
+          <div class="col-lg-6 text-center text-lg-right my-auto">
+            <ul class="list-inline mb-0">
+              <li class="list-inline-item mr-3">
+                <h3 class="text-muted">Powered by</h3>
+              </li>
+              <li class="list-inline-item mr-3">
+                <a href="https://nebulas.io/" target="view_window"><img src="img/nebulas.png"></a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div> 
+    </footer>
+		
+		<div class="modal fade" id="walletModal" aria-hidden="true" data-backdrop="static">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<!-- 模态框头部 -->
+					<div class="modal-header">
+						<h4 class="modal-title">请输入钱包地址</h4>
+						<button type="button" class="close" data-dismiss="modal">&times;</button>
+					</div>
+					<!-- 模态框主体 -->
+					<div class="modal-body">
+						<input type="text" class="form-control" placeholder="钱包地址" id="walletInput">
+					</div>
+					<!-- 模态框底部 -->
+					<div class="modal-footer">
+						<button type="button" data-loading-text="正在处理..." class="btn btn-info" id="saveWallet">保存</button>
+					</div>
+					
+				</div>
+			</div>
+		</div>
+		
+		<script type="text/javascript" src="lib/nebulas.js"></script>
+		<script type="text/javascript" src="lib/nebPay.js"></script>
+    <script src="vendor/jquery/jquery.min.js"></script>
+    <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+		<script type="text/javascript">
+			var myWalletAddress = localStorage.getItem("mywalletaddress");
+			if(!myWalletAddress) {
+				$("#walletModal").modal('show');
+				$("#saveWallet").click(function(){
+					if(!$("#walletInput").val()) {
+						return;
+					}
+					localStorage.setItem("mywalletaddress", $("#walletInput").val());
+					$("#walletModal").modal('hide');
+				});
+			}
+			
+			var address = "n1qpRHNj3Bxed7EuPJRmq48sA3DXoSpa3ns";
+			var nebulas = require("nebulas"), Account = Account, neb = new nebulas.Neb();
+			neb.setRequest(new nebulas.HttpRequest("https://testnet.nebulas.io"))
+			
+			var NebPay = require("nebpay");
+			var nebPay = new NebPay();
+			var serialNumber
+			
+			var from = myWalletAddress
+			var value = "0";
+			var nonce = "0"
+			var gas_price = "1000000"
+			var gas_limit = "2000000"
+			var callFunction1 = "getMyTomatoCount";
+			var callArgs1 = "";
+			var contract1 = {
+					"function": callFunction1,
+					"args": callArgs1
+			}
+			
+			neb.api.call(from, address, value, nonce, gas_price, gas_limit, contract1).then(function (resp) {
+				var result = resp.result;
+				if (result === 'null') {
+					return;
+				}
+				var myTomatoTotal = result.replace(/\"/g,"")
+				$("#doneTotal").text(myTomatoTotal)
+				
+			});
+			
+			var callFunction2 = "getTopTomatoCount";
+			var callArgs2 = "";
+			var contract2 = {
+					"function": callFunction2,
+					"args": callArgs2
+			}
+			
+			neb.api.call(from, address, value, nonce, gas_price, gas_limit, contract2).then(function (resp) {
+				var result = resp.result;
+				console.log(result)
+				if (result === '[]') {
+					var tr = "<tr><th scope='row'><img src='img/gold.png' align='center'></th><td>虚位以待</td><td>--</td></tr><tr><th scope='row'><img src='img/silver.png' align='center'></th><td>虚位以待</td><td>--</td></tr><tr><th scope='row'><img src='img/copper.png' align='center'></th><td>虚位以待</td><td>--</td></tr>"
+					$("#rankTable tbody").html(tr)
+					return;
+				}
+				
+				result = JSON.parse(result)
+				var list = "";
+				
+				for (var i = 0;i <result.length;i++) {
+					if (i == 0) {
+						var first = result[i];
+						console.log(first)
+						if (first.address == "" && first.count == 0) {
+							list += "<tr><th scope='row'><img src='img/gold.png' align='center'></th><td>虚位以待</td><td>--</td></tr>"
+						} else {
+							list += "<tr><th scope='row'><img src='img/gold.png' align='center'></th><td>"+first.address+"</td><td>"+first.count+"</td></tr>"
+						}
+					} else if (i == 1) {
+						var second = result[i];
+						console.log(second)
+						if (second.address == "" && second.count == 0) {
+							list += "<tr><th scope='row'><img src='img/silver.png' align='center'></th><td>虚位以待</td><td>--</td></tr>"
+						} else {
+							list += "<tr><th scope='row'><img src='img/silver.png' align='center'></th><td>"+second.address+"</td><td>"+second.count+"</td></tr>"
+						}
+					} else if (i == 2) {
+						var third = result[2];
+						if (third.address == "" && third.count == 0) {
+							list += "<tr><th scope='row'><img src='img/copper.png' align='center'></th><td>虚位以待</td><td>--</td></tr>"
+						} else {
+							list += "<tr><th scope='row'><img src='img/copper.png' align='center'></th><td>"+third.address+"</td><td>"+third.count+"</td></tr>"
+						}
+					}
+					
+				}
+				
+				$("#rankTable tbody").html(list)
+				
+			});
+				
+		</script>
+		<script type="text/javascript">
+			
+			
+
+
+			
+	</script>
+
+  </body>
+
+</html>

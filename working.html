@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>星云番茄时间管理</title>
+
+		<link href="vendor/jquery-loading/dist/jquery.loading.css" rel="stylesheet" type="text/css"/>
+    <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+
+		<link href="css/tomato.css" rel="stylesheet" type="text/css"/>
+    <link href="vendor/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href="vendor/simple-line-icons/css/simple-line-icons.css" rel="stylesheet" type="text/css">
+    <link href="https://fonts.googleapis.com/css?family=Lato:300,400,700,300italic,400italic,700italic" rel="stylesheet" type="text/css">
+
+    <link href="css/landing-page.min.css" rel="stylesheet">
+
+  </head>
+
+  <body>
+
+    <nav class="navbar navbar-light bg-light static-top">
+      <div class="container">
+        <a class="navbar-brand" href="#"><img alt="Brand" style="max-width:250px;margin-top:-7px;" src="img/logo_word.png"></a>
+      </div>
+    </nav>
+	
+	<section>
+		<div class="container">
+			<div class="row">
+				<div class="col-md-2 mx-auto"></div>
+				<div class="col-md-8 mx-auto text-center" >
+					<div class="mb-5"></div>
+					<div class="mb-5">
+						<span id="itemTitle" class="text-center" style="font-size: 36px;"></span>
+					</div>
+					<span id="clock" style="font-size: 150px;"></span>
+					<div class="row">
+						<div class="col-md-4">
+						</div>
+						<div class="col-md-2">
+							<button type="button" class="btn btn-success" id="workButton">开始工作</button>
+						</div>
+						<div class="col-md-2">
+							<button type="button" class="btn btn-warning" id="resetButton">中止事项</button>
+						</div>
+						<div class="col-md-4">
+						</div>
+					</div>
+				</div>
+				<div class="col-md-2 mx-auto"></div>
+			</div>
+		</div>
+	</section>
+		
+	<div class="modal fade" id="walletModal" aria-hidden="true" data-backdrop="static">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<!-- 模态框头部 -->
+				<div class="modal-header">
+					<h4 class="modal-title">请输入钱包地址</h4>
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+				</div>
+				<!-- 模态框主体 -->
+				<div class="modal-body">
+					<input type="text" class="form-control" placeholder="钱包地址" id="walletInput">
+				</div>
+				<!-- 模态框底部 -->
+				<div class="modal-footer">
+					<button type="button" data-loading-text="正在处理..." class="btn btn-info" id="saveWallet">保存</button>
+				</div>
+				
+			</div>
+		</div>
+	</div>
+	
+	<div class="modal fade" id="finishModal" aria-hidden="true" data-backdrop="static">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<!-- 模态框主体 -->
+				<div class="modal-body text-center">
+					<h4 class="modal-title">当前事项的番茄钟已经用完！</h4>
+				</div>
+				<!-- 模态框底部 -->
+				<div class="modal-footer">
+					<button type="button" data-loading-text="正在处理..." class="btn btn-info" id="doneConfirm">确定</button>
+				</div>
+				
+			</div>
+		</div>
+	</div>
+
+	
+	<script type="text/javascript" src="lib/nebulas.js"></script>
+	<script type="text/javascript" src="lib/nebPay.js"></script>
+  <script src="vendor/jquery/jquery.min.js"></script>
+  <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+	<script src="vendor/jquery.countdown-2.2.0/jquery.countdown.js"></script>
+	<script src="vendor/jquery-loading/dist/jquery.loading.js"></script>
+	
+	<script type="text/javascript">
+		var myWalletAddress = localStorage.getItem("mywalletaddress");
+		
+		if(!myWalletAddress) {
+			$("#walletModal").modal('show');
+			$("#saveWallet").click(function(){
+				if(!$("#walletInput").val()) {
+					return;
+				}
+				localStorage.setItem("mywalletaddress", $("#walletInput").val());
+				$("#walletModal").modal('hide');
+			});
+		} 
+	</script>
+	
+	<script type="text/javascript">
+		
+		function getBelongMonth() {
+			var d = new Date();
+			var month = d.getMonth() + 1;
+			var year = d.getFullYear();
+			return year + "-" + month;
+		}
+		
+		function getCurrentDate() {
+			var d = new Date();
+			var day = d.getDate();
+			var month = d.getMonth() + 1; 
+			var year = d.getFullYear();
+			return year + "-" + month + "-" + day;
+		}
+		
+		$("#currentDate").html(getCurrentDate());
+			
+	</script>
+		
+	<script type="text/javascript">
+		var currentTodoId = localStorage.getItem("currentTodoId");
+		var currentTomatoCount = localStorage.getItem("currentTomatoCount");
+		var minutesPerTomato = 0.1;
+		var planTime= currentTomatoCount * minutesPerTomato * 60 * 1000;
+		var startTime = new Date().getTime();
+		var stopTime = startTime + planTime;
+		var finishFromWhere = "";
+		
+		if (!currentTodoId || !currentTomatoCount) {
+			$('#clock').countdown(new Date().getTime(), function(event) {
+				$(this).html(event.strftime('%H:%M:%S'));
+				$("#workButton").attr("disabled",true);
+				$("#resetButton").attr("disabled",true);
+			});
+		} else {
+			$('#clock').countdown(stopTime, function(event) {
+				$(this).html(event.strftime('%H:%M:%S'));
+			}).on('finish.countdown',function(){
+				if(finishFromWhere === "reset") {
+					return;
+				} else {
+					countDownFinish()
+				}
+			});
+			
+			$("#workButton").attr("disabled",true);
+		}
+		
+		
+		$("#workButton").click(function(){
+			finishFromWhere = "work";
+			startTime = new Date().getTime();
+			stopTime = startTime + planTime;
+			
+			$('#clock').countdown(stopTime, function(event) {
+				$(this).html(event.strftime('%H:%M:%S'));
+			});
+			
+			$("#workButton").attr("disabled",true);
+			$("#resetButton").attr("disabled",false);
+			
+		});
+		
+		$("#resetButton").click(function(){
+			finishFromWhere = "reset";
+			var currentTime = new Date().getTime();
+			$('#clock').countdown(currentTime, function(event) {
+				$(this).html(event.strftime('%H:%M:%S'));
+			});
+			$("#workButton").attr("disabled",false);
+			$("#resetButton").attr("disabled",true);
+			
+		});
+		
+		function showLoading() {
+			$('body').loading({
+				theme: 'dark',
+				message: '正在写入星云链...'
+			});
+		}
+		
+		function hideLoading() {
+			$('body').loading('stop');
+		}
+		
+		
+		$("#doneConfirm").click(function(){
+			$("#finishModal").modal('hide');
+			var address = "n1qpRHNj3Bxed7EuPJRmq48sA3DXoSpa3ns";
+			var nebulas = require("nebulas"), Account = Account, neb = new nebulas.Neb();
+			neb.setRequest(new nebulas.HttpRequest("https://testnet.nebulas.io"))
+			
+			var NebPay = require("nebpay");
+			var nebPay = new NebPay();
+			var serialNumber
+			var intervalQuery 
+			
+			var to = address;
+			var value = "0";
+			var nonce = "0"
+			var gas_price = "1000000"
+			var gas_limit = "2000000"
+			var callFunction = "saveDone";
+			var callArgs = "[\""+currentTodoId+"\",\""+ getBelongMonth() +"\"]";
+			serialNumber = nebPay.call(to, value, callFunction, callArgs, {
+				listener: function(resp){
+					showLoading();
+					intervalQuery = setInterval(function () {
+						receiptTransaction(resp.txhash).then(function (resp) {
+							var txResponse = resp;
+							console.log(txResponse);
+							if (txResponse.status == 1) {
+								clearInterval(intervalQuery);
+								hideLoading();
+								localStorage.setItem("currentTodoId", "");
+								localStorage.setItem("currentTomatoCount", "");
+								window.location.href='list.html';
+							} else if (txResponse.status == 0) {
+								clearInterval(intervalQuery);
+								hideLoading();
+							}
+						}).catch(function (err) {
+							clearInterval(intervalQuery);
+							hideLoading();
+						})
+					}, 3000);
+					
+				}
+			});
+			
+			var receiptTransaction = function (txhash) {
+				var promise = new Promise(function (resolve, reject) {
+					neb.api.getTransactionReceipt(txhash).then(function (resp) {
+						resolve(resp);
+					}).catch(function (err) {
+						console.log(err);
+					});
+				});
+				return promise;
+			}
+			
+		});
+		
+		var address = "n1qpRHNj3Bxed7EuPJRmq48sA3DXoSpa3ns";
+		var nebulas = require("nebulas"), Account = Account, neb = new nebulas.Neb();
+		neb.setRequest(new nebulas.HttpRequest("https://testnet.nebulas.io"))
+		
+		var NebPay = require("nebpay");
+		var nebPay = new NebPay();
+		var serialNumber
+		
+		var from = myWalletAddress
+		var value = "0";
+		var nonce = "0"
+		var gas_price = "1000000"
+		var gas_limit = "2000000"
+		var callFunction = "getTodoById";
+		var callArgs = "[\""+currentTodoId+"\"]";
+		var contract = {
+				"function": callFunction,
+				"args": callArgs
+		}
+		
+		neb.api.call(from, address, value, nonce, gas_price, gas_limit, contract).then(function (resp) {
+			var result = resp.result;
+			console.log(result)
+			if (result === 'null') {
+				return;
+			}
+			
+			result = JSON.parse(result)
+			var title = result.title
+			$("#itemTitle").text(title)
+		});	
+		
+		function countDownFinish() {
+			$("#finishModal").modal('show')
+		}
+	</script>
+	
+	<script type="text/javascript">
+				
+		
+		
+	</script>
+	
+
+
+  </body>
+
+</html>

@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>星云番茄时间管理</title>
+
+		<link href="vendor/jquery-loading/dist/jquery.loading.css" rel="stylesheet" type="text/css"/>
+    <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+
+		<link href="css/tomato.css" rel="stylesheet" type="text/css"/>
+    <link href="vendor/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href="vendor/simple-line-icons/css/simple-line-icons.css" rel="stylesheet" type="text/css">
+    <link href="https://fonts.googleapis.com/css?family=Lato:300,400,700,300italic,400italic,700italic" rel="stylesheet" type="text/css">
+
+    <link href="css/landing-page.min.css" rel="stylesheet">
+
+  </head>
+
+  <body>
+
+    <nav class="navbar navbar-light bg-light static-top">
+      <div class="container">
+        <a class="navbar-brand" href="#"><img alt="Brand" style="max-width:250px;margin-top:-7px;" src="img/logo_word.png"></a>
+				<ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
+					<li class="nav-item">
+						<a class="nav-link" href="index.html">首页</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link active" href="#">事项</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link" href="count.html" id="nav_publish">统计</a>
+					</li>
+				</ul>
+      </div>
+    </nav>
+		
+		<section class="content-1" id="content-1">
+      <div class="container">
+				<div class="mb-4"></div>
+        <div class="row">
+					<div class="col-md-6">
+						<div class="task">
+							<div class="header">
+								今日待办
+								<small class="pull-right">
+									<button title="" type="button" class="btn btn-outline-primary btn-sm" data-toggle="modal" data-target="#myModal">
+										<i class="fa fa-plus"></i> 新建
+									</button>
+								</small>
+							</div>
+							<div class="box">
+								<ul class="list-group" id="todayTodoList">
+
+								</ul>
+							</div>
+						</div>
+					</div>
+					<div class="col-md-6">
+						<div class="task">
+							<div class="header">
+								已完成
+							</div>
+							<div class="box">
+								<ul class="list-group" id="doneList">
+
+								</ul>
+							</div>
+						</div>
+					</div>
+				</div>
+      </div>
+    </section> 
+		
+		<div class="modal fade" id="myModal" aria-hidden="true" data-backdrop="static">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<!-- 模态框头部 -->
+					<div class="modal-header">
+						<h4 class="modal-title">新建今日事项</h4>
+						<button type="button" class="close" data-dismiss="modal">&times;</button>
+					</div>
+					<!-- 模态框主体 -->
+					<div class="modal-body">
+						<div class="form-row">
+							<div class="col-sm-4 text-center">
+								<label class="control-label">番茄钟数</label>
+							</div>
+							<div class="col-sm-8">
+								<select class="form-control" id="selector">
+									<option value="1">1</option>
+									<option value="2">2</option>
+									<option value="3">3</option>
+									<option value="4" selected>4</option>
+									<option value="5">5</option>
+									<option value="6">6</option>
+									<option value="7">7</option>
+								</select> 
+							</div>
+						</div>
+						<div class="mb-2"></div>
+						<div class="form-row">
+							<div class="col-sm-4 text-center">
+								<label class="control-label">事项内容</label>
+							</div>
+							<div class="col-md-8">
+								<input type="text" class="form-control" placeholder="请输入要完成的事项内容" id="itemContent">
+							</div>
+						</div>
+						<div class="mb-2"></div>
+						<div class="form-row">
+							<div class="col-sm-4 text-center">
+								<label class="control-label">日期</label>
+							</div>
+							<div class="col-md-8 text-center">
+								<label class="control-label" id="currentDate"></label>
+							</div>
+						</div>
+					</div>
+					<!-- 模态框底部 -->
+					<div class="modal-footer">
+						<button type="button" class="btn btn btn-light" data-dismiss="modal">取消</button>
+						<button type="button" data-loading-text="正在处理..." class="btn btn-info" id="confirm">确定</button>
+					</div>
+					
+				</div>
+			</div>
+			
+		</div>
+		
+		<div class="modal fade" id="walletModal"  aria-hidden="true" data-backdrop="static">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<!-- 模态框头部 -->
+					<div class="modal-header">
+						<h4 class="modal-title">请输入钱包地址</h4>
+						<button type="button" class="close" data-dismiss="modal">&times;</button>
+					</div>
+					<!-- 模态框主体 -->
+					<div class="modal-body">
+						<input type="text" class="form-control" placeholder="钱包地址" id="walletInput">
+					</div>
+					<!-- 模态框底部 -->
+					<div class="modal-footer">
+						<button type="button" data-loading-text="正在处理..." class="btn btn-info" id="saveWallet">保存</button>
+					</div>
+					
+				</div>
+			</div>
+		</div>
+
+		
+		<script type="text/javascript" src="lib/nebulas.js"></script>
+		<script type="text/javascript" src="lib/nebPay.js"></script>
+    <script src="vendor/jquery/jquery.min.js"></script>
+    <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+		<script src="vendor/jquery-loading/dist/jquery.loading.js"></script>
+		<script type="text/javascript">
+			function getCurrentDate() {
+				var d = new Date();
+				var day = d.getDate()-2;
+				var month = d.getMonth() + 1; 
+				var year = d.getFullYear();
+				return year + "-" + month + "-" + day;
+			}
+			
+			$("#currentDate").html(getCurrentDate());
+				
+		</script>
+		
+		<script type="text/javascript">
+				
+		</script>
+		
+		<script type="text/javascript">
+			var myWalletAddress = localStorage.getItem("mywalletaddress");
+			
+			if(!myWalletAddress) {
+				$("#walletModal").modal('show');
+				$("#saveWallet").click(function(){
+					if(!$("#walletInput").val()) {
+						return;
+					}
+					localStorage.setItem("mywalletaddress", $("#walletInput").val());
+					$("#walletModal").modal('hide');
+				});
+			} else {
+				var address = "n1qpRHNj3Bxed7EuPJRmq48sA3DXoSpa3ns";
+				var nebulas = require("nebulas"), Account = Account, neb = new nebulas.Neb();
+				neb.setRequest(new nebulas.HttpRequest("https://testnet.nebulas.io"))
+				
+				var NebPay = require("nebpay");
+				var nebPay = new NebPay();
+				var serialNumber
+
+				var from = myWalletAddress
+				var value = "0";
+				var nonce = "0"
+				var gas_price = "1000000"
+				var gas_limit = "2000000"
+				var callFunction1 = "getTodayTodo";
+				var callArgs1 = "[\""+getCurrentDate()+"\"]";
+				var contract1 = {
+						"function": callFunction1,
+						"args": callArgs1
+				}
+				
+				neb.api.call(from, address, value, nonce, gas_price, gas_limit, contract1).then(function (resp) {
+					var result = resp.result;
+					console.log(result)
+					if (result === '[]') {
+						return;
+					}
+
+					result = JSON.parse(result)
+					var list = "";
+					for (var i = 0;i <result.length;i++) {
+						var todoId = result[i].todoId
+						var tomatoCount = result[i].costTomatoCount
+						var doneFlag = result[i].doneFlag
+						if (doneFlag == "no") {
+							if (tomatoCount == 1 || tomatoCount == 2) {
+								list += "<li class='list-group-item list-group-item-action list-group-item-success' value='"+todoId+"'>"+result[i].title+"<button type='button' class='btn btn-sm btn-outline-secondary pull-right' value='"+tomatoCount+"'>开 始</button></li>";
+							} else if (tomatoCount == 3 || tomatoCount == 4) {
+								list += "<li class='list-group-item list-group-item-action list-group-item-primary' value='"+todoId+"'>"+result[i].title+"<button type='button' class='btn btn-sm btn-outline-secondary pull-right' value='"+tomatoCount+"'>开 始</button></li>";
+							} else if (tomatoCount == 5 || tomatoCount == 6) {
+								list += "<li class='list-group-item list-group-item-action list-group-item-warning' value='"+todoId+"'>"+result[i].title+"<button type='button' class='btn btn-sm btn-outline-secondary pull-right' value='"+tomatoCount+"'>开 始</button></li>";
+							} else {
+								list += "<li class='list-group-item list-group-item-action list-group-item-danger' value='"+todoId+"'>"+result[i].title+"<button type='button' class='btn btn-sm btn-outline-secondary pull-right' value='"+tomatoCount+"'>开 始</button></li>";
+							}
+							
+							$("#todayTodoList").html(list)
+						}
+						
+					}
+					
+				});	
+			}
+					
+			var callFunction2 = "getDone";
+			var callArgs2 = "";
+			var contract2 = {
+					"function": callFunction2,
+					"args": callArgs2
+			}
+			
+			neb.api.call(from, address, value, nonce, gas_price, gas_limit, contract2).then(function (resp) {
+				var result = resp.result;
+				if (result === '[]') {
+					return;
+				}
+				console.log("result2 ="+result);
+				
+				result = JSON.parse(result)
+				var list = "";
+				for (var i = 0;i <result.length;i++) {
+					var doneTitle = result[i].title
+					var doneDate = result[i].date
+					list += "<li class='list-group-item list-group-item-action'>"+doneTitle+"<span class='pull-right'>"+doneDate+"</span></li>"
+				}
+				$("#doneList").html(list)
+			});
+		</script>
+		
+		<script type="text/javascript">
+			$("#todayTodoList").on("click","li",function(){
+				var currentTodoId = $(this).val()
+				var currentTomatoCount = $(this).children('button').val()
+				console.log(currentTodoId)
+				console.log(currentTomatoCount)
+				localStorage.setItem("currentTodoId", currentTodoId);
+				localStorage.setItem("currentTomatoCount", currentTomatoCount);
+				window.location.href='working.html';
+			});
+				
+		</script>
+		
+		
+		<script type="text/javascript">
+			$(function(){  
+				$("#confirm").click(function(){
+					if (!$("#itemContent").val()) {
+							return;
+					}
+					
+					$("#myModal").modal('hide');
+					
+					var address = "n1qpRHNj3Bxed7EuPJRmq48sA3DXoSpa3ns";
+					var nebulas = require("nebulas"), Account = Account, neb = new nebulas.Neb();
+					neb.setRequest(new nebulas.HttpRequest("https://testnet.nebulas.io"))
+					
+					var NebPay = require("nebpay");
+					var nebPay = new NebPay();
+					var serialNumber
+					var intervalQuery 
+					
+					var to = address;
+					var value = "0";
+					var nonce = "0"
+					var gas_price = "1000000"
+					var gas_limit = "2000000"
+					var callFunctionSet = "saveTodo";
+					var arg1 = $("#selector").val(),
+							arg2 = $("#itemContent").val(),
+							arg3 = $("#currentDate").html();
+					var callArgsSet = JSON.stringify([arg1, arg2, arg3]);
+					serialNumber = nebPay.call(to, value, callFunctionSet, callArgsSet, {
+						listener: function(resp) {
+							showLoading();
+							intervalQuery = setInterval(function () {
+								receiptTransaction(resp.txhash).then(function (resp) {
+									var txResponse = resp;
+									console.log(txResponse);
+									if (txResponse.status == 1) {
+										clearInterval(intervalQuery);
+										hideLoading();
+										location.reload()
+									} else if (txResponse.status == 0) {
+										clearInterval(intervalQuery);
+										hideLoading();
+										location.reload()
+									}
+								}).catch(function (err) {
+									clearInterval(intervalQuery);
+									hideLoading();
+									location.reload()
+								})
+							}, 3000);
+						}
+					});
+					
+					var receiptTransaction = function (txhash) {
+						var promise = new Promise(function (resolve, reject) {
+							neb.api.getTransactionReceipt(txhash).then(function (resp) {
+								resolve(resp);
+							}).catch(function (err) {
+								console.log(err);
+							});
+						});
+						return promise;
+					}
+
+				});
+				
+				function showLoading() {
+					$('body').loading({
+						theme: 'dark',
+						message: '正在写入星云链...'
+					});
+				}
+				
+				function hideLoading() {
+					$('body').loading('stop');
+				}
+			});
+			
+			
+
+		
+	  </script>
+
+  </body>
+
+</html>
