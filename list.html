@@ -163,7 +163,7 @@
 		<script type="text/javascript">
 			function getCurrentDate() {
 				var d = new Date();
-				var day = d.getDate()-2;
+				var day = d.getDate();
 				var month = d.getMonth() + 1; 
 				var year = d.getFullYear();
 				return year + "-" + month + "-" + day;
@@ -191,7 +191,7 @@
 					location.reload();
 				});
 			} else {
-				var address = "n1qpRHNj3Bxed7EuPJRmq48sA3DXoSpa3ns";
+				var address = "n1fUGQuxDFJeSHDcqAUHaU76ai94eGW4xDP";
 				var nebulas = require("nebulas"), Account = Account, neb = new nebulas.Neb();
 				neb.setRequest(new nebulas.HttpRequest("https://testnet.nebulas.io"))
 				
@@ -291,7 +291,7 @@
 					
 					$("#myModal").modal('hide');
 					
-					var address = "n1qpRHNj3Bxed7EuPJRmq48sA3DXoSpa3ns";
+					var address = "n1fUGQuxDFJeSHDcqAUHaU76ai94eGW4xDP";
 					var nebulas = require("nebulas"), Account = Account, neb = new nebulas.Neb();
 					neb.setRequest(new nebulas.HttpRequest("https://testnet.nebulas.io"))
 					
