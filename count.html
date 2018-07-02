@@ -207,6 +207,7 @@
 					var days = resp.result;
 					if (!days) {
 						$("#dayOfCurrentMonth").text('0')
+						location.reload()
 						return;
 					}
 					$("#dayOfCurrentMonth").text(days)

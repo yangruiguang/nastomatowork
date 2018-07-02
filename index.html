@@ -191,6 +191,7 @@
 				var result = resp.result;
 				if (result === 'null') {
 					$("#doneTotal").text("0")
+					location.reload()
 					return;
 				}
 				var myTomatoTotal = result.replace(/\"/g,"")
@@ -211,6 +212,7 @@
 				if (result === '[]') {
 					var tr = "<tr><th scope='row'><img src='img/gold.png' align='center'></th><td>虚位以待</td><td>--</td></tr><tr><th scope='row'><img src='img/silver.png' align='center'></th><td>虚位以待</td><td>--</td></tr><tr><th scope='row'><img src='img/copper.png' align='center'></th><td>虚位以待</td><td>--</td></tr>"
 					$("#rankTable tbody").html(tr)
+					location.reload()
 					return;
 				}
 				
