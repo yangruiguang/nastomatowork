@@ -205,6 +205,10 @@
 				
 				neb.api.call(from, address, value, nonce, gas_price, gas_limit, contract1).then(function (resp) {
 					var days = resp.result;
+					if (!days) {
+						$("#dayOfCurrentMonth").text('0')
+						return;
+					}
 					$("#dayOfCurrentMonth").text(days)
 					if (days < 3) {
 						$("#getlevel1Reward").attr("disabled",true);
